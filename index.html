@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+		<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="./frontendScript.js"></script>
+
+    <title>Hello, world!</title>
+  </head>
+	<body>
+		<div>
+			<h1 class="text-center">Gutenberg Project</h1>
+			<h5 class="text-muted pb-10 text-center"><em>Made by Kasper Vetter, Mikkel Ziemer, Florent Haxha and Phillip Brink</em></h5>
+			<form action="#" id="data">
+				<div class="container">
+					<div class="row">
+						<div class="col-4">
+							<input class="form-control" name="searchField" type="text" id="searchField">
+						</div>
+						<div class="col-4">
+							<select class="custom-select" name="DB" id="dbEndpoint">
+								<option value="Neo4j">Neo4j</option>
+								<option value="Postgres">Postgres</option>
+							</select>
+						</div>
+						<div class="col-4">
+							<select class="custom-select" name="action" id="action">
+								<option value="City">City</option>
+								<option value="Author">Author</option>
+								<option value="Title">Title</option>
+								<option value="Geolocation">Geolocation</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-4"></div>
+						<div class="col-4"></div>
+						<div class="col-4">
+								<button class="btn btn-primary float-right mt-1" type="submit" id="submit">Submit</button>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+		<hr>
+		<div class="container">
+				<h3 class="text-center">Result</h3>
+			<div class="row" >
+				<div class="col-5 border-right">
+      		<p id="demo"></p>
+					<table class="table" id="results">
+						<thead>
+							<tr>
+								<th>
+									Title
+								</th>
+								<th>
+									Authors
+								</th>
+								<th>
+									City
+								</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+				<div class="col-7" id="map" style="height: 30em">
+				</div>
+			</div>
+		</div>
+
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCD4W8AdDWAUZkjhST46p-Y9AXqjAQuY1o&callback=initMap" async defer></script>
+
+	</body>
+</html>
