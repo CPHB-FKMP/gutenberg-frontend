@@ -1,7 +1,12 @@
 $(document).ready(function(){
+
+ $("#resultTable").hide();
+
   $("#data").submit(function(event) {
     var data = $("#data").serializeArray();
+    console.log("Data form Form");
     console.log(data);
+    console.log("----------------")
     $.ajax({
       type: "GET",
       url: "https://jsonplaceholder.typicode.com/posts/1",
@@ -14,29 +19,9 @@ $(document).ready(function(){
       }
     });
   })
-
 });
 
-// Builds the HTML Table out of myList.
-function buildHtmlTable(result) {
-  var data = JSON.stringify(result);
-  var columns = ["Title", "Author", "City"];
-
-  for (var i = 0; i < data.length; i++) {
-    console.log("1");
-    var row$ = $('<tr/>');
-    for (var colIndex = 0; colIndex < columns.length; colIndex++) {
-      console.log("2");
-      var cellValue = data[i][columns[colIndex]];
-      if (cellValue == null) cellValue = "";
-      row$.append($('<td/>').html(cellValue));
-    }
-    console.log("3");
-    $("#results").append(row$);
-    console.log($("#results"));
-  }
-}
-
+// Google Map
 function initMap() {
   var myLatLng = {lat: -25.363, lng: 131.044};
 
@@ -46,17 +31,48 @@ function initMap() {
     center: myLatLng,
     zoom: 4
   });
+}
 
-  // Create a marker and set its position.
-  var marker = new google.maps.Marker({
-    map: map,
-    position: myLatLng,
-    title: 'Hello World!'
+// Builds the HTML Table out of myList.
+function buildHtmlTable(data) {
+
+  var doc = document;
+
+  var fragment = doc.createDocumentFragment();
+
+  var headers = ["Title", "Authors", "City", "Location"];
+
+  var tr = doc.createElement("tr");
+
+  headers.forEach(element => {
+    var th = doc.createElement("th");
+    th.innerHTML = element;
+    fragment.appendChild(th);
   });
 
-  var marker2 = new google.maps.Marker({
-    map: map,
-    position: {lat: -30, lng: 131.044},
-    title: 'Hello World!'
-  });
+  fragment.appendChild(tr);
+
+  for (i = 0; i < 3; i++) {
+  
+    var tr = doc.createElement("tr");
+    for (j = 0; j < 4; j++){
+      var td = doc.createElement("td");
+      td.innerHTML = i;
+
+      tr.appendChild(td);
+    }
+
+    fragment.appendChild(tr);
+  }
+
+var table = doc.createElement("table");
+
+table.appendChild(fragment);
+
+doc.getElementById("results").innerHTML = "";
+
+doc.getElementById("results").appendChild(table);
+
+$("#resultTable").show();
+
 }
