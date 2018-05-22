@@ -1,6 +1,11 @@
 $(document).ready(function(){
 
- $("#resultTable").hide();
+ var books = 
+ [
+  {title : "Kloden", author : "Thomas", city : "Sydney", location : {lat: -25.363, lng: 140.044}},
+  {title : "Hej", author : "Mads", city : "Copenhagen", location : {lat: -25.363, lng: 120.044}},
+  {title : "abc", author : "Geo", city : "USA", location : {lat: -25.363, lng: 150.044}}
+  ];
 
   $("#data").submit(function(event) {
     var data = $("#data").serializeArray();
@@ -11,10 +16,8 @@ $(document).ready(function(){
       type: "GET",
       url: "https://jsonplaceholder.typicode.com/posts/1",
        success: function(result){
-         console.log(result);
-        buildHtmlTable(result);
+         buildResult(books);
       }, error: function(error){
-         console.log(error);
         $("#demo").html(error);
       }
     });
@@ -22,26 +25,35 @@ $(document).ready(function(){
 });
 
 // Google Map
-function initMap() {
-  var myLatLng = {lat: -25.363, lng: 131.044};
 
+function initMap() {
   // Create a map object and specify the DOM element
   // for display.
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: myLatLng,
+  return map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -25.363, lng: 131.044},
     zoom: 4
   });
 }
 
+function createPoint(map, book) {
+    var marker = new google.maps.Marker({
+      map: map,
+      position: book.location,
+      title: book.title
+    });
+}
+
 // Builds the HTML Table out of myList.
-function buildHtmlTable(data) {
+function buildResult(books) {
 
   var doc = document;
+  var map = initMap();
 
   var fragment = doc.createDocumentFragment();
 
-  var headers = ["Title", "Authors", "City", "Location"];
+  // Headers
 
+  var headers = ["Title", "Authors"];
   var tr = doc.createElement("tr");
 
   headers.forEach(element => {
@@ -52,18 +64,23 @@ function buildHtmlTable(data) {
 
   fragment.appendChild(tr);
 
-  for (i = 0; i < 3; i++) {
-  
-    var tr = doc.createElement("tr");
-    for (j = 0; j < 4; j++){
-      var td = doc.createElement("td");
-      td.innerHTML = i;
+  // Each book
 
-      tr.appendChild(td);
+  books.forEach(element => {
+    var tr = doc.createElement("tr");
+
+    for (var key in element) {
+      if(key != "city" && key != "location"){
+        var td = doc.createElement("td");
+        td.innerHTML = element[key];
+        tr.appendChild(td);
+      }
     }
 
+    createPoint(map, element)
+
     fragment.appendChild(tr);
-  }
+  });
 
 var table = doc.createElement("table");
 
@@ -71,8 +88,8 @@ table.appendChild(fragment);
 
 doc.getElementById("results").innerHTML = "";
 
-doc.getElementById("results").appendChild(table);
+table.classList.add("table");
 
-$("#resultTable").show();
+doc.getElementById("results").appendChild(table);
 
 }
