@@ -1,24 +1,37 @@
 $(document).ready(function(){
 
- var books = 
- [
-  {title : "Kloden", author : "Thomas", city : "Sydney", location : {lat: -25.363, lng: 140.044}},
-  {title : "Hej", author : "Mads", city : "Copenhagen", location : {lat: -25.363, lng: 120.044}},
-  {title : "abc", author : "Geo", city : "USA", location : {lat: -25.363, lng: 150.044}}
-  ];
+  $.ajax({
+    type: "GET",
+    url : "http://localhost:8081",
+     success: function(result){
+    }, error: function(error){
+    }
+  });
 
   $("#data").submit(function(event) {
+
+    var url;
+
     var data = $("#data").serializeArray();
-    console.log("Data form Form");
-    console.log(data);
-    console.log("----------------")
+
+    if($("action").val() == geolocation){
+      getLocation();
+      url =  "http://localhost:8081/"+data[1].value+"/book?"+data[2].value+"="+data[0].value+"&"+
+    } else {
+      url = "http://localhost:8081/"+data[1].value+"/book?"+data[2].value+"="+data[0].value;
+    }
+
+    event.preventDefault();
+
     $.ajax({
       type: "GET",
-      url: "https://jsonplaceholder.typicode.com/posts/1",
+      url : url,
        success: function(result){
-         buildResult(books);
+         console.log(result);
+         buildResult(result);
       }, error: function(error){
-        $("#demo").html(error);
+        console.log(error)
+        $("#error").html(error);
       }
     });
   })
@@ -39,7 +52,8 @@ function createPoint(map, book) {
     var marker = new google.maps.Marker({
       map: map,
       position: book.location,
-      title: book.title
+      title: book.title,
+      optimized: false
     });
 }
 
@@ -70,7 +84,7 @@ function buildResult(books) {
     var tr = doc.createElement("tr");
 
     for (var key in element) {
-      if(key != "city" && key != "location"){
+      if(key != "cities" && key != "location" && key != "id"){
         var td = doc.createElement("td");
         td.innerHTML = element[key];
         tr.appendChild(td);
@@ -90,6 +104,20 @@ doc.getElementById("results").innerHTML = "";
 
 table.classList.add("table");
 
+doc.getElementById("searchField").value = "";
+
 doc.getElementById("results").appendChild(table);
 
+}
+
+function getLocation() {
+
+  if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+function showPosition(position) {
+  document.getElementById("searchField").value = position.coords.latitude + ", " + position.coords.longitude;
 }

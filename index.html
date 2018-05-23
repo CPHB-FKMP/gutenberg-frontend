@@ -28,16 +28,16 @@
 						</div>
 						<div class="col-4">
 							<select class="custom-select" name="DB" id="dbEndpoint">
-								<option value="Neo4j">Neo4j</option>
-								<option value="Postgres">Postgres</option>
+								<option value="neo4j">Neo4j</option>
+								<option value="postgres">Postgres</option>
 							</select>
 						</div>
 						<div class="col-4">
 							<select class="custom-select" name="action" id="action">
-								<option value="City">City</option>
-								<option value="Author">Author</option>
-								<option value="Title">Title</option>
-								<option value="Geolocation">Geolocation</option>
+								<option value="city">City</option>
+								<option value="author">Author</option>
+								<option value="title">Title</option>
+								<option value="geolocation">Geolocation</option>
 							</select>
 						</div>
 					</div>
@@ -55,6 +55,7 @@
 		<div class="container">
 				<h3 class="text-center">Result</h3>
 			<div class="row" id="resultTable">
+				<p id="error"></p>
 				<div class="col-5 border-right" id="results">
 				</div>
 				<div class="col-7" id="map" style="height: 30em">
