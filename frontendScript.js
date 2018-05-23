@@ -14,16 +14,24 @@ $(document).ready(function(){
 
     var data = $("#data").serializeArray();
 
-    if($("action").val() == geolocation){
-      getLocation();
-      url =  "http://localhost:8081/"+data[1].value+"/book?"+data[2].value+"="+data[0].value+"&"+
+    if(data[2].value == "geolocation"){
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          getData("http://localhost:8081/"+data[1].value+"/book?lat="+position.coords.latitude+"&long="+position.coords.longitude);
+        });
+      }
     } else {
-      url = "http://localhost:8081/"+data[1].value+"/book?"+data[2].value+"="+data[0].value;
+      getData("http://localhost:8081/"+data[1].value+"/book?"+data[2].value+"="+data[0].value);
     }
 
     event.preventDefault();
 
-    $.ajax({
+    
+  })
+});
+
+function getData(url){
+  $.ajax({
       type: "GET",
       url : url,
        success: function(result){
@@ -34,8 +42,7 @@ $(document).ready(function(){
         $("#error").html(error);
       }
     });
-  })
-});
+}
 
 // Google Map
 
@@ -119,5 +126,6 @@ function getLocation() {
   }
 }
 function showPosition(position) {
+
   document.getElementById("searchField").value = position.coords.latitude + ", " + position.coords.longitude;
 }
