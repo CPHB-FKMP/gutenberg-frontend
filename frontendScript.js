@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+   $("#resultTable").hide();
+
   $.ajax({
     type: "GET",
     url : "http://localhost:8081",
@@ -9,12 +11,10 @@ $(document).ready(function(){
   });
 
   $("#data").submit(function(event) {
-
-    var url;
-
     var data = $("#data").serializeArray();
-
+    console.log(data[2].value);
     if(data[2].value == "geolocation"){
+      console.log(navigator.geolocation);
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((position) => {
           getData("http://localhost:8081/"+data[1].value+"/book?lat="+position.coords.latitude+"&long="+position.coords.longitude);
@@ -38,7 +38,6 @@ function getData(url){
          console.log(result);
          buildResult(result);
       }, error: function(error){
-        console.log(error)
         $("#error").html(error);
       }
     });
@@ -46,29 +45,35 @@ function getData(url){
 
 // Google Map
 
-function initMap() {
+function initMap(book) {
   // Create a map object and specify the DOM element
   // for display.
+  if(book.cities!= null){
+    var location = {lat: book.cities[0].latitude, lng: book.cities[0].longitude};
+  } else {
+    location = {lat: 48.5, lng: 23.383333};
+  }
   return map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -25.363, lng: 131.044},
+    center: location,
     zoom: 4
   });
 }
 
 function createPoint(map, book) {
+  book.cities.forEach(city => {
     var marker = new google.maps.Marker({
       map: map,
-      position: book.location,
-      title: book.title,
-      optimized: false
+      position: {lat : city.latitude , lng : city.longitude},
+      title: book.title
     });
+  })  
 }
 
 // Builds the HTML Table out of myList.
 function buildResult(books) {
 
   var doc = document;
-  var map = initMap();
+  var map = initMap(books[0]);
 
   var fragment = doc.createDocumentFragment();
 
@@ -91,41 +96,35 @@ function buildResult(books) {
     var tr = doc.createElement("tr");
 
     for (var key in element) {
-      if(key != "cities" && key != "location" && key != "id"){
+      if(key == "title"){
         var td = doc.createElement("td");
         td.innerHTML = element[key];
         tr.appendChild(td);
+      } else if(key == "authors" && element[key] !== null) {
+        var td = doc.createElement("td");
+        td.innerHTML = element[key].map(e => e.name).join(",");
+        tr.appendChild(td);
+      } else if (key == "cities" && element[key] !== null){
+          createPoint(map, element)
       }
     }
 
-    createPoint(map, element)
+    
 
     fragment.appendChild(tr);
   });
 
-var table = doc.createElement("table");
+  var table = doc.createElement("table");
 
-table.appendChild(fragment);
+  table.appendChild(fragment);
 
-doc.getElementById("results").innerHTML = "";
+  doc.getElementById("results").innerHTML = "";
 
-table.classList.add("table");
+  table.classList.add("table");
 
-doc.getElementById("searchField").value = "";
+  doc.getElementById("searchField").value = "";
 
-doc.getElementById("results").appendChild(table);
+  doc.getElementById("results").appendChild(table);
 
-}
-
-function getLocation() {
-
-  if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-      x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
-function showPosition(position) {
-
-  document.getElementById("searchField").value = position.coords.latitude + ", " + position.coords.longitude;
+  $("#resultTable").show();
 }
