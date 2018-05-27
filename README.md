@@ -40,7 +40,7 @@ docker run -p 5432:5432 --name psql -d aaxa/gutenberg-postgresql
 docker exec -it psql-test /bin/bash
 ```
 login to the PostgreSQL database as appdev user
-``
+```
 psql -h localhost -U appdev
 ```
 When you are logged in as a user then you can run the following commands
