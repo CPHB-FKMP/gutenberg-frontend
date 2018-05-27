@@ -81,4 +81,40 @@ docker exec -it neo4j-test /bin/bash
 rm -rf /var/lib/neo4j/data/databases/graph.db/
 
 docker exec neo4j-test sh -c 'neo4j-admin import \
-    --nodes:Author /import/neo-authors-test.csv --nodes:Book /import/neo-books-test.csv --nodes:City /i
+    --nodes:Author /import/neo-authors-test.csv --nodes:Book /import/neo-books-test.csv --nodes:City /import/neo-cities-test.csv \
+    --relationships:WRITTEN_BY /import/neo-books-authors-test.csv --relationships:CONTAINS /import/neo-books-cities-test.csv \
+    --ignore-missing-nodes=true \
+    --ignore-duplicate-nodes=true \
+--delimiter "|"'
+
+```
+
+### Postgress
+
+Use these command in your terminal to set up test data for Postgres
+
+```
+docker run -p 5433:5432 --name psql-test -d aaxa/gutenberg-postgresql:test
+
+docker exec -it psql-test /bin/bash
+```
+login to the PostgreSQL database as appdev user
+```
+psql -h localhost -U appdev
+```
+
+When you are logged in as a user then you can run the following commands
+
+Copy and run this script in the terminal (Script-link)[https://github.com/CPHB-FKMP/gutenberg-backend/blob/master/src/main/resources/PostgreSQL.sql]
+
+```
+   \copy gutenberg.books FROM 'import/postgres-books-test.csv' WITH CSV HEADER DELIMITER AS '|';
+
+   \copy gutenberg.cities FROM 'import/postgres-cities-test.csv' WITH CSV HEADER DELIMITER AS '|';
+
+   \copy gutenberg.authors FROM 'import/postgres-authors-test.csv' WITH CSV HEADER DELIMITER AS '|';
+
+   \copy gutenberg.authors_books FROM 'import/postgres-books-authors-test.csv' WITH CSV HEADER DELIMITER AS '|';
+
+   \copy gutenberg.books_cities FROM 'import/postgres-books-cities-test.csv' WITH CSV HEADER DELIMITER AS '|';
+```
