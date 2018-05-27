@@ -4,7 +4,7 @@
 
 * Http-server
 * Browser
-* Backend can be found (here)[https://github.com/CPHB-FKMP/gutenberg-backend]
+* Backend can be found [here](https://github.com/CPHB-FKMP/gutenberg-backend)
 
 ## Http-server
 
